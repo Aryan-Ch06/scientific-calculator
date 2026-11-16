@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glass Scientific Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="glow glow-teal"></div>
+  <div class="glow glow-pink"></div>
+
+  <main class="page">
+    <h1 class="title">Glass Scientific Calculator</h1>
+
+    <section class="calculator" aria-label="Scientific calculator">
+
+      <!-- DISPLAY -->
+      <div class="display">
+        <div class="display-expression" id="expression"></div>
+        <div class="display-result" id="result">0</div>
+      </div>
+
+      <div class="body">
+
+        <!-- SCIENTIFIC PANEL: 17 functions + angle mode toggle -->
+        <div class="keys keys-sci">
+          <button class="key key-mode" id="angle-mode" data-action="toggle-angle">DEG</button>
+          <button class="key" data-action="sin">sin</button>
+          <button class="key" data-action="cos">cos</button>
+
+          <button class="key" data-action="tan">tan</button>
+          <button class="key" data-action="asin">sin⁻¹</button>
+          <button class="key" data-action="acos">cos⁻¹</button>
+
+          <button class="key" data-action="atan">tan⁻¹</button>
+          <button class="key" data-action="log">log</button>
+          <button class="key" data-action="ln">ln</button>
+
+          <button class="key" data-action="square">x²</button>
+          <button class="key" data-action="cube">x³</button>
+          <button class="key" data-action="power">xⁿ</button>
+
+          <button class="key" data-action="sqrt">√x</button>
+          <button class="key" data-action="cbrt">∛x</button>
+          <button class="key" data-action="nthroot">ⁿ√x</button>
+
+          <button class="key" data-action="factorial">n!</button>
+          <button class="key" data-action="deg2rad">°→rad</button>
+          <button class="key" data-action="percent">%</button>
+        </div>
+
+        <!-- BASIC KEYPAD -->
+        <div class="keys keys-basic">
+          <button class="key key-clear" data-action="clear">AC</button>
+          <button class="key key-clear" data-action="delete">DEL</button>
+          <button class="key key-op" data-action="negate">+/−</button>
+          <button class="key key-op" data-action="divide">÷</button>
+
+          <button class="key" data-num="7">7</button>
+          <button class="key" data-num="8">8</button>
+          <button class="key" data-num="9">9</button>
+          <button class="key key-op" data-action="multiply">×</button>
+
+          <button class="key" data-num="4">4</button>
+          <button class="key" data-num="5">5</button>
+          <button class="key" data-num="6">6</button>
+          <button class="key key-op" data-action="subtract">−</button>
+
+          <button class="key" data-num="1">1</button>
+          <button class="key" data-num="2">2</button>
+          <button class="key" data-num="3">3</button>
+          <button class="key key-op" data-action="add">+</button>
+
+          <button class="key" data-action="negate" aria-label="Change sign">±</button>
+          <button class="key" data-num="0">0</button>
+          <button class="key" data-num=".">.</button>
+          <button class="key key-equals" data-action="equals">=</button>
+        </div>
+
+      </div>
+    </section>
+
+    <p class="hint">xⁿ: type the base, press xⁿ, type the power, press =.<br>ⁿ√x: type the number, press ⁿ√x, type the root, press =.<br>Use the DEG / RAD key to switch the angle mode for sin, cos, tan and their inverses.</p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

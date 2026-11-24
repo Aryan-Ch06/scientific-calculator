@@ -1,0 +1,324 @@
+/* ============================================================
+   THEMES: dark (charcoal + neon green) is the default,
+   light is switched on with [data-theme="light"]
+   ============================================================ */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg-a: #24272b;
+  --bg-b: #08090a;
+  --card-a: #1f2225;
+  --card-b: #121315;
+  --key-a: #272a2f;
+  --key-b: #16181b;
+  --neon: #39ff14;
+  --neon-rgb: 57, 255, 20;
+  --accent-text: #39ff14;        /* coloured text (operators, display, title) */
+  --text: #e9ffe4;
+  --sh-dark: rgba(0, 0, 0, 0.75);
+  --sh-light: rgba(255, 255, 255, 0.07);
+  --hover-light: rgba(255, 255, 255, 0.09);
+  --inset-dark: rgba(0, 0, 0, 0.8);
+  --inset-light: rgba(255, 255, 255, 0.04);
+  --card-shadow: 14px 14px 30px rgba(0, 0, 0, 0.8), -8px -8px 24px rgba(255, 255, 255, 0.04), 0 0 40px rgba(57, 255, 20, 0.08);
+  --display-bg: #070808;
+  --display-shadow: inset 5px 5px 11px rgba(0, 0, 0, 0.9), inset -4px -4px 10px rgba(255, 255, 255, 0.04), 0 0 0 1px rgba(57, 255, 20, 0.2);
+  --clear-a: #1d3a1c;
+  --clear-b: #10200f;
+  --eq-a: #5dff3d;
+  --eq-b: #1fd80a;
+  --eq-text: #031a05;
+  --eq-border: #b8ffa8;
+  --error: #ff4d6d;
+  --glow-opacity: 0.2;
+  --edge: 0.4;                   /* strength of the neon edge on keys */
+  --glow-1: #39ff14;             /* corner glows */
+  --glow-2: #39ff14;
+  --clear-text: #39ff14;         /* AC / DEL text */
+  --clear-rgb: 57, 255, 20;      /* AC / DEL edge + glow */
+  --eq-glow-rgb: 57, 255, 20;    /* = key glow */
+}
+
+
+:root {
+  --o: clamp(3px, 0.85vh, 6px);   /* shadow distance, scales with screen */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  height: 100vh;
+  height: 100dvh;               /* real visible height on phones */
+  background: radial-gradient(circle at 25% 10%, var(--bg-a), var(--bg-b) 70%);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  overflow: hidden;             /* the page itself never scrolls */
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* faint glow in the corners */
+.glow {
+  position: fixed;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  filter: blur(130px);
+  opacity: var(--glow-opacity);
+  z-index: 0;
+  pointer-events: none;
+}
+.glow-teal { background: var(--glow-1); top: -100px; right: -80px; }
+.glow-pink { background: var(--glow-2); bottom: -120px; left: -100px; }
+
+/* ---------- Theme switch button ---------- */
+.theme-toggle {
+  position: fixed;
+  top: clamp(8px, 2vh, 20px);
+  right: clamp(10px, 2.5vw, 24px);
+  z-index: 5;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--neon-rgb), var(--edge));
+  background: linear-gradient(145deg, var(--key-a), var(--key-b));
+  color: var(--accent-text);
+  cursor: pointer;
+  box-shadow:
+    4px 4px 9px var(--sh-dark),
+    -4px -4px 9px var(--sh-light),
+    0 0 10px rgba(var(--neon-rgb), 0.18);
+  transition: box-shadow 0.18s ease, transform 0.12s ease, border-color 0.18s ease;
+}
+.theme-toggle:hover {
+  border-color: rgba(var(--neon-rgb), 0.9);
+  box-shadow:
+    5px 5px 11px var(--sh-dark),
+    -4px -4px 10px var(--hover-light),
+    0 0 18px rgba(var(--neon-rgb), 0.5);
+}
+.theme-toggle:active {
+  transform: scale(0.94);
+  box-shadow:
+    inset 3px 3px 7px var(--inset-dark),
+    inset -3px -3px 7px var(--inset-light);
+}
+.theme-toggle:focus-visible { outline: 2px solid var(--neon); outline-offset: 3px; }
+.theme-toggle svg { display: block; }
+:root[data-theme="dark"] .icon-moon,
+:root:not([data-theme]) .icon-moon { display: none; }
+:root[data-theme="light"] .icon-sun { display: none; }
+
+.page {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  overflow-y: auto;             /* only scrolls when the window is really tiny */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: safe center;
+  gap: clamp(10px, 2.4vh, 24px);
+  padding: clamp(8px, 2vh, 24px) clamp(10px, 3vw, 24px);
+}
+
+/* ---------- Title (plain text) ---------- */
+.title {
+  display: inline-block;
+  flex: 0 0 auto;
+  font-size: clamp(1.1rem, 3.8vh, 1.8rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--accent-text);
+  cursor: default;
+}
+
+/* ---------- Neumorphic card ---------- */
+.calculator {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 640px;
+  max-height: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.8vh, 16px);
+  padding: clamp(10px, 2.2vh, 20px);
+  border-radius: 28px;
+  background: linear-gradient(145deg, var(--card-a), var(--card-b));
+  border: 1px solid rgba(var(--neon-rgb), 0.18);
+  box-shadow: var(--card-shadow);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Display: pressed IN */
+.display {
+  flex: 0 0 auto;
+  min-height: clamp(56px, 11vh, 92px);
+  padding: clamp(6px, 1.4vh, 14px) 18px;
+  border-radius: 18px;
+  background: var(--display-bg);
+  box-shadow: var(--display-shadow);
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 2px;
+  overflow: hidden;
+}
+.display-expression {
+  min-height: 1.2em;
+  font-size: clamp(0.75rem, 1.9vh, 0.95rem);
+  color: rgba(var(--neon-rgb), 0.7);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.display-result {
+  font-size: clamp(1.4rem, 4.6vh, 2.2rem);
+  font-weight: 500;
+  color: var(--accent-text);
+  white-space: nowrap;
+  overflow-x: auto;
+}
+.display-result.error {
+  color: var(--error);
+  font-size: clamp(0.95rem, 2.6vh, 1.3rem);
+  white-space: normal;
+}
+
+.body {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: clamp(10px, 2vh, 18px);
+}
+
+.keys {
+  display: grid;
+  gap: clamp(7px, 1.5vh, 13px);
+  padding: 3px;
+}
+.keys-sci   { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(6, 1fr); }
+.keys-basic { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(5, 1fr); }
+
+/* ---------- Keys: neumorphic + green edge ---------- */
+.key {
+  min-height: 38px;
+  min-width: 0;
+  padding: 0;
+  border-radius: clamp(10px, 2vh, 16px);
+  border: 1px solid rgba(var(--neon-rgb), var(--edge));
+  background: linear-gradient(145deg, var(--key-a), var(--key-b));
+  color: var(--text);
+  font-size: clamp(0.85rem, 2.6vh, 1.1rem);
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow:
+    var(--o) var(--o) calc(var(--o) * 2) var(--sh-dark),
+    calc(var(--o) * -1) calc(var(--o) * -1) calc(var(--o) * 2) var(--sh-light),
+    0 0 10px rgba(var(--neon-rgb), 0.18),
+    inset 0 0 8px rgba(var(--neon-rgb), 0.08);
+  transition: box-shadow 0.18s ease, transform 0.12s ease, background 0.15s ease, border-color 0.18s ease;
+}
+.key:hover {
+  transform: translateY(-1px);
+  border-color: rgba(var(--neon-rgb), 0.9);
+  box-shadow:
+    calc(var(--o) * 1.4) calc(var(--o) * 1.4) calc(var(--o) * 2.6) var(--sh-dark),
+    calc(var(--o) * -1.2) calc(var(--o) * -1.2) calc(var(--o) * 2.4) var(--hover-light),
+    0 0 18px rgba(var(--neon-rgb), 0.55),
+    inset 0 0 12px rgba(var(--neon-rgb), 0.16);
+}
+/* pressed: the key sinks IN */
+.key:active,
+.key.pressed {
+  transform: scale(0.97);
+  background: linear-gradient(145deg, var(--key-b), var(--key-a));
+  border-color: var(--neon);
+  box-shadow:
+    inset var(--o) var(--o) calc(var(--o) * 2) var(--inset-dark),
+    inset calc(var(--o) * -1) calc(var(--o) * -1) calc(var(--o) * 2) var(--inset-light),
+    0 0 20px rgba(var(--neon-rgb), 0.7);
+}
+.key:focus-visible { outline: 2px solid var(--neon); outline-offset: 3px; }
+
+.keys-sci .key { font-size: clamp(0.75rem, 2.2vh, 1rem); }
+.key-mode { color: var(--accent-text); font-weight: 700; }
+
+/* AC / DEL and operators: green text */
+.key-clear,
+.key-op {
+  color: var(--accent-text);
+  font-weight: 700;
+  border-color: rgba(var(--neon-rgb), 0.7);
+  box-shadow:
+    var(--o) var(--o) calc(var(--o) * 2) var(--sh-dark),
+    calc(var(--o) * -1) calc(var(--o) * -1) calc(var(--o) * 2) var(--sh-light),
+    0 0 14px rgba(var(--neon-rgb), 0.35),
+    inset 0 0 10px rgba(var(--neon-rgb), 0.14);
+}
+.key-clear {
+  background: linear-gradient(145deg, var(--clear-a), var(--clear-b));
+  color: var(--clear-text);
+  border-color: rgba(var(--clear-rgb), 0.7);
+  box-shadow:
+    var(--o) var(--o) calc(var(--o) * 2) var(--sh-dark),
+    calc(var(--o) * -1) calc(var(--o) * -1) calc(var(--o) * 2) var(--sh-light),
+    0 0 14px rgba(var(--clear-rgb), 0.3),
+    inset 0 0 10px rgba(var(--clear-rgb), 0.12);
+}
+.key-clear:active, .key-clear.pressed { background: linear-gradient(145deg, var(--clear-b), var(--clear-a)); }
+
+.key-wide { grid-column: span 2; }
+
+/* equals: solid green */
+.key-equals {
+  background: linear-gradient(145deg, var(--eq-a), var(--eq-b));
+  color: var(--eq-text);
+  font-weight: 800;
+  border-color: var(--eq-border);
+  box-shadow:
+    var(--o) var(--o) calc(var(--o) * 2) var(--sh-dark),
+    calc(var(--o) * -1) calc(var(--o) * -1) calc(var(--o) * 2) var(--sh-light),
+    0 0 24px rgba(var(--eq-glow-rgb), 0.8);
+}
+.key-equals:hover {
+  background: linear-gradient(145deg, var(--eq-a), var(--eq-b));
+  filter: brightness(1.08);
+  box-shadow:
+    var(--o) var(--o) calc(var(--o) * 2) var(--sh-dark),
+    0 0 36px rgba(var(--eq-glow-rgb), 1);
+}
+.key-equals:active, .key-equals.pressed { background: linear-gradient(145deg, var(--eq-b), var(--eq-a)); }
+
+.hint {
+  flex: 0 0 auto;
+  max-width: 640px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  text-align: center;
+  color: rgba(var(--neon-rgb), 0.75);
+}
+
+/* Phones (portrait) */
+@media (max-width: 560px) {
+  .page { justify-content: flex-start; }
+  .calculator { max-height: none; border-radius: 22px; }
+  .body {
+    grid-template-columns: 1fr;
+    grid-template-rows: 3fr 5fr;
+  }
+  .keys-sci { grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(3, 1fr); }
+  .keys-sci .key { font-size: clamp(0.62rem, 3.2vw, 0.85rem); }
+}
+
+@media (max-height: 820px) { .hint { display: none; } }
+@media (max-height: 480px) { .title { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .key, .theme-toggle, body, .calculator { transition: none; }
+}
